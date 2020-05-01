@@ -1,5 +1,10 @@
 pipeline{
     agent { docker { image 'python:3.7.2' } }
+    environment {
+        registry = "ahmedemad2051/python-demo"
+        registryCredential = 'dockerhub'
+        dockerImage = ''
+    }
     stages{
         stage('build') {
             steps {
@@ -13,6 +18,13 @@ pipeline{
             post{
                 success{
                     echo "======== test successfully========"
+                    stage('Building image') {
+                        steps{
+                            script {
+                            dockerImage = docker.build registry + ":$BUILD_NUMBER"
+                            }
+                        }
+                    }
                 }
                 failure{
                     echo "======== test failed========"
