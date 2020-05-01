@@ -18,16 +18,16 @@ pipeline{
             post{
                 success{
                     echo "======== test successfully========"
-                    stage('Building image') {
-                        steps{
-                            script {
-                            dockerImage = docker.build registry + ":$BUILD_NUMBER"
-                            }
-                        }
-                    }
                 }
                 failure{
                     echo "======== test failed========"
+                }
+            }
+        }
+        stage('Building image') {
+            steps{
+                script {
+                dockerImage = docker.build registry + ":$BUILD_NUMBER"
                 }
             }
         }
