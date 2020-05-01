@@ -1,16 +1,21 @@
 pipeline{
-    agent any
+    agent { docker { image 'python:3.7.2' } }
     stages{
-        stage("run test"){
+        stage('build') {
+            steps {
+                sh 'pip install -r requirements.txt'
+            }
+        }
+        stage("test"){
             steps{
                 sh 'python tests/test.py'
             }
             post{
                 success{
-                    echo "========A executed successfully========"
+                    echo "======== test successfully========"
                 }
                 failure{
-                    echo "======== tests failed========"
+                    echo "======== test failed========"
                 }
             }
         }
