@@ -1,32 +1,30 @@
 pipeline{
     agent any
     stages{
-        stage("A"){
+        stage("run test"){
             steps{
-                echo "========executing A========"
+                sh 'python tests/test.py'
             }
             post{
-                always{
-                    echo "========always========"
-                }
                 success{
                     echo "========A executed successfully========"
                 }
                 failure{
-                    echo "========A execution failed========"
+                    echo "======== tests failed========"
                 }
             }
         }
+        post{
+            always{
+                echo "========always========"
+            }
+            success{
+                echo "========pipeline executed successfully ========"
+            }
+            failure{
+                echo "========pipeline execution failed========"
+            }
+        }
     }
-    post{
-        always{
-            echo "========always========"
-        }
-        success{
-            echo "========pipeline executed successfully ========"
-        }
-        failure{
-            echo "========pipeline execution failed========"
-        }
-    }
+
 }
