@@ -48,8 +48,8 @@ pipeline{
         stage("Run python container with sidecar"){
             steps{
                script{
-                    docker.image("redis").run("") { c ->
-                        container = dockerImage.run("--link ${c.id}:redis_host -p 8000:8000")
+                    redis_container= docker.image("redis").run()
+                    python_container = dockerImage.run("--link ${redis_container.id}:redis_host -p 8000:8000")
                         // docker.image(registry+":$BUILD_NUMBER").inside("--link ${c.id}:redis_host") {
                         // /*
                         // * Run some tests which require MySQL, and assume that it is
@@ -57,8 +57,8 @@ pipeline{
                         // */
                         
                         // }
-                    }
-            }
+                    
+                }
             }
         }
     }   
