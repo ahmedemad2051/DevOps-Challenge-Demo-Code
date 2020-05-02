@@ -35,8 +35,8 @@ pipeline{
             steps{
                 script {
                     docker.withRegistry( '', registryCredential ) {
-                    dockerImage.push()
-                }
+                        dockerImage.push()
+                    }
                 }
             }
         }
@@ -47,18 +47,12 @@ pipeline{
         // }
         stage("Run python container with sidecar"){
             steps{
-               script{
-                    redis_container= docker.image("redis").run()
-                    python_container = dockerImage.run("--link ${redis_container.id}:redis_host -p 9000:8000")
-                        // docker.image(registry+":$BUILD_NUMBER").inside("--link ${c.id}:redis_host") {
-                        // /*
-                        // * Run some tests which require MySQL, and assume that it is
-                        // * available on the host name `db`
-                        // */
-                        
-                        // }
-                    
-                }
+                sh docker run -d --name=redis_server redis
+                sh docker run -d --name python_demo --link redis_server:redis_host -p 9000:8000 dockerImage.name
+            //    script{
+            //         redis_container= docker.image("redis").run()
+            //         python_container = dockerImage.run("--link ${redis_container.id}:redis_host -p 9000:8000")
+            //     }
             }
         }
     }   
