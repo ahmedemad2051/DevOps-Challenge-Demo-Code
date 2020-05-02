@@ -48,8 +48,10 @@ pipeline{
         //     }
         // }
         stage("Image Prune"){
-            imagePrune(redisImage)
-            imagePrune(pythonImage)
+            steps{
+                imagePrune(redisImage)
+                imagePrune(pythonImage)
+            }
         }
         stage("Run python container with sidecar"){
             steps{
