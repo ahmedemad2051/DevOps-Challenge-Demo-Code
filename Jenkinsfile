@@ -48,7 +48,7 @@ pipeline{
         stage("Run python container with sidecar"){
             steps{
                script{
-                    docker.run("redis") { c ->
+                    docker.image("redis").withRun("") { c ->
                    
                     }
             }
