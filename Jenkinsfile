@@ -56,11 +56,8 @@ pipeline{
         stage("Run python container with sidecar"){
             steps{
                script{
-                    // redis_container= docker.image("redis").run()
-                    // python_container = dockerImage.run("--link ${redis_container.id}:redis_host -p 8000:8000")
-                    docker.image('redis').withRun('--rm') { c ->
-                        dockerImage.run("--link ${c.id}:redis_host --rm -p 8000:8000")
-                    }
+                    redis_container= docker.image("redis").run("--rm")
+                    python_container = dockerImage.run("--link ${redis_container.id}:redis_host --rm -p 8000:8000")
                 }
             }
         }
