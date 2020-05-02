@@ -31,6 +31,32 @@ pipeline{
                 }
             }
         }
+        stage('Deploy Image') {
+            steps{
+                script {
+                    docker.withRegistry( '', registryCredential ) {
+                    dockerImage.push()
+                }
+                }
+            }
+        }
+        // stage('Remove Unused docker image') {
+        //     steps{
+        //         sh "docker rmi $registry:$BUILD_NUMBER"
+        //     }
+        // }
+        stage("Run python container with sidecar"){
+            docker.image("redis") { c ->
+                docker.image(registry+":$BUILD_NUMBER").inside("--link ${c.id}:redis_host") {
+                    /*
+                    * Run some tests which require MySQL, and assume that it is
+                    * available on the host name `db`
+                    */
+                    
+                }
+            }
+        }
+    }   
     
     }
     post{
