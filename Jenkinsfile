@@ -1,12 +1,12 @@
 pipeline{
     agent { docker { image 'python:3.7.2' } }
     environment {
-        registry = "ahmedemad2051/python-demo"
+        registry = "ahmedemad2051/python-demo_dev"
         registryCredential = 'dockerhub'
         dockerImage = ''
-        redisContainer = "redis_server"
-        pythonContainer = "python_demo"
-        webPort = "8000"
+        redisContainer = "redis_server_dev"
+        pythonContainer = "python_demo_dev"
+        webPort = "9000"
     }
     stages{
         stage('build') {
