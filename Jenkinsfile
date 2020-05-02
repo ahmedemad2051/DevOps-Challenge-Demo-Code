@@ -4,8 +4,9 @@ pipeline{
         registry = "ahmedemad2051/python-demo"
         registryCredential = 'dockerhub'
         dockerImage = ''
-        redisImage = "redis_server"
-        pythonImage = "python_demo"
+        redisContainer = "redis_server"
+        pythonContainer = "python_demo"
+        webPort = "8000"
     }
     stages{
         stage('build') {
@@ -42,22 +43,17 @@ pipeline{
                 }
             }
         }
-        // stage('Remove Unused docker image') {
-        //     steps{
-        //         sh "docker rmi $registry:$BUILD_NUMBER"
-        //     }
-        // }
-        stage("Image Prune"){
+        stage("Stop current containers"){
             steps{
-                imagePrune(redisImage)
-                imagePrune(pythonImage)
+                stopContainer(redisContainer)
+                stopContainer(pythonContainer)
             }
         }
         stage("Run python container with sidecar"){
             steps{
                script{
-                    redis_container= docker.image("redis").run("--rm --name ${redisImage}")
-                    python_container = dockerImage.run("--link ${redis_container.id}:redis_host --rm --name ${pythonImage} -p 8000:8000")
+                    redis_container= docker.image("redis").run("--rm --name ${redisContainer}")
+                    python_container = dockerImage.run("--link ${redis_container.id}:redis_host --rm --name ${pythonContainer} -p ${webPort}:8000")
                 }
             }
         }
@@ -78,9 +74,8 @@ pipeline{
 
 }
 
-def imagePrune(containerName){
+def stopContainer(containerName){
     try {
-        // sh "docker image prune -f"
         sh "docker stop $containerName"
     } catch(error){}
 }
