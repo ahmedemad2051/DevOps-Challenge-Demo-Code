@@ -48,7 +48,7 @@ pipeline{
         stage("Run python container with sidecar"){
             steps{
                script{
-                    docker.image("redis") { c ->
+                    docker.run("redis") { c ->
                    
                     }
             }
@@ -70,3 +70,11 @@ pipeline{
     }
 
 }
+
+//  docker.image(registry+":$BUILD_NUMBER").inside("--link ${c.id}:redis_host") {
+//                         /*
+//                         * Run some tests which require MySQL, and assume that it is
+//                         * available on the host name `db`
+//                         */
+                        
+//                     }
